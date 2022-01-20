@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="movieContainer">
 		<view>
 			<text>{{city}}</text>
 			<icon class="iconfont icon-dingwei"></icon>
@@ -33,29 +33,30 @@
 				</view>
 			</block>
 			<!-- 待映电影 -->
-			<block v-else="tabCur === 1">
-				<scroll-view scroll-y="true">
+			<block v-else-if="tabCur === 1">
+				<scroll-view  scroll-x="true" >
 					<!-- 期待电影 -->
-					<view class="rich">
-						<!-- #ifndef MP-WEIXIN -->
+					<!-- <view class="rich">
 						<rich-text :nodes="expectMoviesData"></rich-text>
-						<!-- #endif -->
+					</view> -->
+					<view class="lateralContainer">
+					<view class="expectMovies" v-for="item in crosswiseData" :key="item.id">
+						<image class="movies" :src="item.img"></image>
+						<view class="title">{{item.nm}}</view>
 					</view>
-					<view class="rich">
-						<!-- #ifndef H5 -->
-						<view v-html="expectMoviesData"></view>
-						<!-- #endif -->
-					</view>
-					<!-- 待映电影列表 -->
-					<view v-for="(item,index) in reflectedData" :key="index">
-						<view> {{index}} </view>
-						<block v-for="item in index" :key="item">
-							<navigator open-type="navigate" style="border-bottom: 2rpx solid #f7ebeb">
-								<movieList :hotMovieData="item"></movieList>
-							</navigator>
-						</block>
 					</view>
 				</scroll-view>
+			<scroll-view  scroll-y="true" >
+				<!-- 待映电影列表 -->
+				<view v-for="(item,index) in reflectedData" :key="item.id">
+					<view> {{index}} </view>
+					<block v-for="data in item" :key="data.id">
+						<navigator open-type="navigate" style="border-bottom: 2rpx solid #f7ebeb">
+							<movieList :hotMovieData="data"></movieList>
+						</navigator>
+					</block>
+				</view>
+			</scroll-view>
 			</block>
 		</view>
 	</view>
@@ -65,6 +66,7 @@
 		fetchCity,
 		fetchMovieList,
 		fetchExpectMovies,
+		fetchHorizontalMovies,
 		fetchToHitMovie
 	} = require('../../api/index.js')
 	const {
@@ -90,6 +92,7 @@
 				expectMoviesData: "", // 待映期待电影
 				reflectedData: [], // 待映电影数据,
 				isPullRefresh: false, // 是否下拉刷新   
+				crosswiseData:[] // 横向电影数据
 			}
 		},
 		methods: {
@@ -136,12 +139,42 @@
 				}
 				// 正则替换   w.h 替换为空    图片才能加载出来
 				result = result.map(item => {
-					item.img = item.img.replace(/\/w.h/, '')
+					item.img = item.img.replace(/\w.h/, '')
 					return item
 				})
 				// 合并数据
 				result = [...this.movieListData, ...result]
 				this.movieListData = result
+			},
+			// 获取横向期待电影
+			async horizontalMovies(){
+				let result = await fetchHorizontalMovies();
+				result = result.map(item=>{
+					item.img = item.img.replace(/\w.h/,'')
+					return item
+				})
+				this.crosswiseData = result
+			},
+			// 获取待映电影
+			async toHitMovie(){
+				let result = await fetchToHitMovie();
+				let movieList = result
+				movieList = movieList.map(item => {
+					item.img = item.img.replace(/\/w.h/, '')
+					return item
+				})
+				// 日期分组  {  1月1日 周六: [{…}] }
+				let dateGroupMovies = {};
+				movieList.forEach(item => {
+					// 如果里面有日期(key)就把每一项数据加进去作为值(value)
+					// 没有日期(key)就把每一项数据作为他的key
+					if (dateGroupMovies[item.comingTitle]) {
+						dateGroupMovies[item.comingTitle].push(item)
+					} else {
+						dateGroupMovies[item.comingTitle] = [item]
+					}
+				})
+				this.reflectedData = dateGroupMovies
 			},
 			// 获取设备窗口的高度
 			async getWindowHeight() {
@@ -149,6 +182,7 @@
 					windowHeight
 				} = await wxGetSystemInfo()
 				this.windowHeight = windowHeight
+				console.log(windowHeight)
 			},
 			// 上拉加载更多   页码++  然后再发送请求获取
 			scrollLoadMore() {
@@ -191,17 +225,13 @@
 					// 如果用户同意,就获取位置,并且隐藏授权按钮
 					if (res.authSetting['scope.userLocation']) {
 						_this.getUserLocation();
-						_this.setData({
-							isAgreeGetLocation: true
-						})
+						_this.isAgreeGetLocation = true
 					} else {
 						// 否则就提示授权,并且把授权按钮显示
 						wx.showToast({
 								title: '请打开授权页面进行授权',
 							}),
-							_this.setData({
-								isAgreeGetLocation: false
-							})
+							_this.isAgreeGetLocation = false
 					}
 				}
 			})
@@ -209,51 +239,49 @@
 		// 页面隐藏的时候触发
 		onHide: function() {
 			console.log('隐藏');
-			this.setData({
-				isFirstTime: false
-			})
+			this.isFirstTime = false
 		},
 		async onLoad() {
-			this.isPullRefresh = true
 			//初始化设备窗口高度
 			this.getWindowHeight()
 			// 获取位置
 			let city = wx.getStorageSync('city');
 			if (city) {
-				this.setData({
-					city
-				})
+				this.city = city
 			} else {
 				//调用方法 重新获取用户位置
 				this.getUserLocation()
 			}
+			// 获取横向期待电影
+			this.horizontalMovies()
+			// 下拉刷新
+			this.isPullRefresh = true
 			// 初始化热映电影列表
 			this.movieList()
-			let result = await Promise.all([fetchExpectMovies(), fetchToHitMovie()])
-			// 获取待映近期期待的电影 
-			let expectMoviesData = result[0]
-			this.expectMoviesData = expectMoviesData
-
 			// 获取待映电影列表
-			let {
-				movieList
-			} = result[1]
-			movieList = movieList.map(item => {
-				item.img = item.img.replace(/\/w.h/, '')
-				return item
-			})
-			// 日期分组  {  1月1日 周六: [{…}] }
-			let dateGroupMovies = {};
-			movieList.forEach(item => {
-				// 如果里面有日期(key)就把每一项数据加进去作为值(value)
-				// 没有日期(key)就把每一项数据作为他的key
-				if (dateGroupMovies[item.comingTitle]) {
-					dateGroupMovies[item.comingTitle].push(item)
-				} else {
-					dateGroupMovies[item.comingTitle] = [item]
-				}
-			})
-			this.reflectedData = dateGroupMovies
+			this.toHitMovie()
+			// let result = await Promise.all([fetchExpectMovies(), fetchToHitMovie()])
+			// // 获取待映近期期待的电影 
+			// let expectMoviesData = result[0]
+			// this.expectMoviesData = expectMoviesData
+			// let movieList = result[1]
+			// console.log('mo',result[1])
+			// movieList = movieList.map(item => {
+			// 	item.img = item.img.replace(/\/w.h/, '')
+			// 	return item
+			// })
+			// // 日期分组  {  1月1日 周六: [{…}] }
+			// let dateGroupMovies = {};
+			// movieList.forEach(item => {
+			// 	// 如果里面有日期(key)就把每一项数据加进去作为值(value)
+			// 	// 没有日期(key)就把每一项数据作为他的key
+			// 	if (dateGroupMovies[item.comingTitle]) {
+			// 		dateGroupMovies[item.comingTitle].push(item)
+			// 	} else {
+			// 		dateGroupMovies[item.comingTitle] = [item]
+			// 	}
+			// })
+			// this.reflectedData = dateGroupMovies
 		}
 	}
 </script>
@@ -288,5 +316,18 @@
 				background-color: #F62D5C;
 			}
 		}
+	}
+	.movieContainer{
+	.lateralContainer{
+		display: flex;
+		justify-content: space-between;
+	.expectMovies{
+		margin: 20rpx;
+		.movies{
+			width: 300rpx;
+			height: 300rpx;
+		}
+	}
+	}
 	}
 </style>

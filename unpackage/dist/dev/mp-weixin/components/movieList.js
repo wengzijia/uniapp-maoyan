@@ -140,7 +140,12 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 var _default =
 {
   name: "movieList",
-  props: ['hotMovieData'],
+  props: {
+    hotMovieData: {
+      type: Object,
+      default: {} } },
+
+
   data: function data() {
     return {
       movieList: [] };

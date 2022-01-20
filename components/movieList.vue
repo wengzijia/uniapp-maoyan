@@ -24,7 +24,12 @@
 <script>
 	export default {
 		name:"movieList",
-		props:['hotMovieData'],
+		props:{
+			hotMovieData:{
+				type:Object,
+				default:{}
+			}
+		},
 		data() {
 			return {
 				movieList:[]

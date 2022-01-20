@@ -67,4 +67,15 @@
   margin-left: -18rpx;
   background-color: #F62D5C;
 }
+.movieContainer .lateralContainer {
+  display: flex;
+  justify-content: space-between;
+}
+.movieContainer .lateralContainer .expectMovies {
+  margin: 20rpx;
+}
+.movieContainer .lateralContainer .expectMovies .movies {
+  width: 300rpx;
+  height: 300rpx;
+}
 

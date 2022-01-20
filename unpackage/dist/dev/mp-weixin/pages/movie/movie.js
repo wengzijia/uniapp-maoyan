@@ -209,13 +209,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 var _require =
 
 
 
 
 
-__webpack_require__(/*! ../../api/index.js */ 21),fetchCity = _require.fetchCity,fetchMovieList = _require.fetchMovieList,fetchExpectMovies = _require.fetchExpectMovies,fetchToHitMovie = _require.fetchToHitMovie;var _require2 =
+
+__webpack_require__(/*! ../../api/index.js */ 21),fetchCity = _require.fetchCity,fetchMovieList = _require.fetchMovieList,fetchExpectMovies = _require.fetchExpectMovies,fetchHorizontalMovies = _require.fetchHorizontalMovies,fetchToHitMovie = _require.fetchToHitMovie;var _require2 =
 
 
 __webpack_require__(/*! ../../utils/util.js */ 23),apiCurrying = _require2.apiCurrying;
@@ -238,7 +240,8 @@ var wxGetSystemInfo = apiCurrying(wx.getSystemInfo);var movieList = function mov
       pagesize: 10,
       expectMoviesData: "", // 待映期待电影
       reflectedData: [], // 待映电影数据,
-      isPullRefresh: false // 是否下拉刷新   
+      isPullRefresh: false, // 是否下拉刷新   
+      crosswiseData: [] // 横向电影数据
     };
   },
   methods: {
@@ -285,19 +288,50 @@ var wxGetSystemInfo = apiCurrying(wx.getSystemInfo);var movieList = function mov
 
                 // 正则替换   w.h 替换为空    图片才能加载出来
                 result = result.map(function (item) {
-                  item.img = item.img.replace(/\/w.h/, '');
+                  item.img = item.img.replace(/\w.h/, '');
                   return item;
                 });
                 // 合并数据
                 result = [].concat(_toConsumableArray(_this2.movieListData), _toConsumableArray(result));
                 _this2.movieListData = result;case 10:case "end":return _context2.stop();}}}, _callee2);}))();
     },
+    // 获取横向期待电影
+    horizontalMovies: function horizontalMovies() {var _this3 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {var result;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:_context3.next = 2;return (
+                  fetchHorizontalMovies());case 2:result = _context3.sent;
+                result = result.map(function (item) {
+                  item.img = item.img.replace(/\w.h/, '');
+                  return item;
+                });
+                _this3.crosswiseData = result;case 5:case "end":return _context3.stop();}}}, _callee3);}))();
+    },
+    // 获取待映电影
+    toHitMovie: function toHitMovie() {var _this4 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {var result, movieList, dateGroupMovies;return _regenerator.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:_context4.next = 2;return (
+                  fetchToHitMovie());case 2:result = _context4.sent;
+                movieList = result;
+                movieList = movieList.map(function (item) {
+                  item.img = item.img.replace(/\/w.h/, '');
+                  return item;
+                });
+                // 日期分组  {  1月1日 周六: [{…}] }
+                dateGroupMovies = {};
+                movieList.forEach(function (item) {
+                  // 如果里面有日期(key)就把每一项数据加进去作为值(value)
+                  // 没有日期(key)就把每一项数据作为他的key
+                  if (dateGroupMovies[item.comingTitle]) {
+                    dateGroupMovies[item.comingTitle].push(item);
+                  } else {
+                    dateGroupMovies[item.comingTitle] = [item];
+                  }
+                });
+                _this4.reflectedData = dateGroupMovies;case 8:case "end":return _context4.stop();}}}, _callee4);}))();
+    },
     // 获取设备窗口的高度
-    getWindowHeight: function getWindowHeight() {var _this3 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {var _yield$wxGetSystemInf, windowHeight;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:_context3.next = 2;return (
+    getWindowHeight: function getWindowHeight() {var _this5 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {var _yield$wxGetSystemInf, windowHeight;return _regenerator.default.wrap(function _callee5$(_context5) {while (1) {switch (_context5.prev = _context5.next) {case 0:_context5.next = 2;return (
 
 
-                  wxGetSystemInfo());case 2:_yield$wxGetSystemInf = _context3.sent;windowHeight = _yield$wxGetSystemInf.windowHeight;
-                _this3.windowHeight = windowHeight;case 5:case "end":return _context3.stop();}}}, _callee3);}))();
+                  wxGetSystemInfo());case 2:_yield$wxGetSystemInf = _context5.sent;windowHeight = _yield$wxGetSystemInf.windowHeight;
+                _this5.windowHeight = windowHeight;
+                console.log(windowHeight);case 6:case "end":return _context5.stop();}}}, _callee5);}))();
     },
     // 上拉加载更多   页码++  然后再发送请求获取
     scrollLoadMore: function scrollLoadMore() {
@@ -340,17 +374,13 @@ var wxGetSystemInfo = apiCurrying(wx.getSystemInfo);var movieList = function mov
         // 如果用户同意,就获取位置,并且隐藏授权按钮
         if (res.authSetting['scope.userLocation']) {
           _this.getUserLocation();
-          _this.setData({
-            isAgreeGetLocation: true });
-
+          _this.isAgreeGetLocation = true;
         } else {
           // 否则就提示授权,并且把授权按钮显示
           wx.showToast({
             title: '请打开授权页面进行授权' }),
 
-          _this.setData({
-            isAgreeGetLocation: false });
-
+          _this.isAgreeGetLocation = false;
         }
       } });
 
@@ -358,52 +388,50 @@ var wxGetSystemInfo = apiCurrying(wx.getSystemInfo);var movieList = function mov
   // 页面隐藏的时候触发
   onHide: function onHide() {
     console.log('隐藏');
-    this.setData({
-      isFirstTime: false });
-
+    this.isFirstTime = false;
   },
-  onLoad: function onLoad() {var _this4 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {var city, result, expectMoviesData, movieList, dateGroupMovies;return _regenerator.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:
-              _this4.isPullRefresh = true;
+  onLoad: function onLoad() {var _this6 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6() {var city;return _regenerator.default.wrap(function _callee6$(_context6) {while (1) {switch (_context6.prev = _context6.next) {case 0:
               //初始化设备窗口高度
-              _this4.getWindowHeight();
+              _this6.getWindowHeight();
               // 获取位置
               city = wx.getStorageSync('city');
               if (city) {
-                _this4.setData({
-                  city: city });
-
+                _this6.city = city;
               } else {
                 //调用方法 重新获取用户位置
-                _this4.getUserLocation();
+                _this6.getUserLocation();
               }
+              // 获取横向期待电影
+              _this6.horizontalMovies();
+              // 下拉刷新
+              _this6.isPullRefresh = true;
               // 初始化热映电影列表
-              _this4.movieList();_context4.next = 7;return (
-                Promise.all([fetchExpectMovies(), fetchToHitMovie()]));case 7:result = _context4.sent;
-              // 获取待映近期期待的电影 
-              expectMoviesData = result[0];
-              _this4.expectMoviesData = expectMoviesData;
-
+              _this6.movieList();
               // 获取待映电影列表
-
-              movieList =
-              result[1].movieList;
-              movieList = movieList.map(function (item) {
-                item.img = item.img.replace(/\/w.h/, '');
-                return item;
-              });
-              // 日期分组  {  1月1日 周六: [{…}] }
-              dateGroupMovies = {};
-              movieList.forEach(function (item) {
-                // 如果里面有日期(key)就把每一项数据加进去作为值(value)
-                // 没有日期(key)就把每一项数据作为他的key
-                if (dateGroupMovies[item.comingTitle]) {
-                  dateGroupMovies[item.comingTitle].push(item);
-                } else {
-                  dateGroupMovies[item.comingTitle] = [item];
-                }
-              });
-              _this4.reflectedData = dateGroupMovies;case 15:case "end":return _context4.stop();}}}, _callee4);}))();
-  } };exports.default = _default;
+              _this6.toHitMovie();
+              // let result = await Promise.all([fetchExpectMovies(), fetchToHitMovie()])
+              // // 获取待映近期期待的电影 
+              // let expectMoviesData = result[0]
+              // this.expectMoviesData = expectMoviesData
+              // let movieList = result[1]
+              // console.log('mo',result[1])
+              // movieList = movieList.map(item => {
+              // 	item.img = item.img.replace(/\/w.h/, '')
+              // 	return item
+              // })
+              // // 日期分组  {  1月1日 周六: [{…}] }
+              // let dateGroupMovies = {};
+              // movieList.forEach(item => {
+              // 	// 如果里面有日期(key)就把每一项数据加进去作为值(value)
+              // 	// 没有日期(key)就把每一项数据作为他的key
+              // 	if (dateGroupMovies[item.comingTitle]) {
+              // 		dateGroupMovies[item.comingTitle].push(item)
+              // 	} else {
+              // 		dateGroupMovies[item.comingTitle] = [item]
+              // 	}
+              // })
+              // this.reflectedData = dateGroupMovies
+            case 7:case "end":return _context6.stop();}}}, _callee6);}))();} };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

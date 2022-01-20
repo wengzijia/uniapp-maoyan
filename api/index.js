@@ -20,9 +20,17 @@ exports.fetchExpectMovies = function(){
   })
 }
 
+// 获取横向期待电影
+exports.fetchHorizontalMovies = function(){
+	let url = `http://unimy.wengzijia.top/expectedList`;
+	return request({
+		url
+	})
+}
+
 // 获取待映电影列表
 exports.fetchToHitMovie = function(){
-  let url = `https://m.maoyan.com/ajax/movieOnInfoList`;
+  let url = `http://unimy.wengzijia.top/waitComingList`;
   return request({
     url
   })
