@@ -1,0 +1,1 @@
+<view><view class="imgWrap"><image></image></view><button class="loginBtn login" type="warn" data-event-opts="{{[['tap',[['login',['$event']]]]]}}" bindtap="__e">微信一键登录</button></view>

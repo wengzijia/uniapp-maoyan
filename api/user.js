@@ -32,3 +32,27 @@ exports.fetchUserOrder = function(){
     url
   })
 }
+
+// 登录
+exports.fetchLogin = function(username,password){
+	let url = `${API_URL}/login`;
+	return request({
+		method:"POST",
+		url,
+		data:{
+		  username,password
+		}
+	})
+}
+
+// 注册
+exports.fetchRegister = function(username,password){
+	let url = `${API_URL}/register`;
+	return request({
+		method:"POST",
+		url,
+		data:{
+		  username,password
+		}
+	})
+}

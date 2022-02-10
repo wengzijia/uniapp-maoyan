@@ -224,7 +224,7 @@ __webpack_require__(/*! ../../utils/util.js */ 23),apiCurrying = _require2.apiCu
 
 var wxLogin = apiCurrying(wx.login);
 var wxGetLocation = apiCurrying(wx.getLocation);
-var wxGetSystemInfo = apiCurrying(wx.getSystemInfo);var movieList = function movieList() {__webpack_require__.e(/*! require.ensure | components/movieList */ "components/movieList").then((function () {return resolve(__webpack_require__(/*! ../../components/movieList.vue */ 32));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
+var wxGetSystemInfo = apiCurrying(wx.getSystemInfo);var movieList = function movieList() {__webpack_require__.e(/*! require.ensure | components/movieList */ "components/movieList").then((function () {return resolve(__webpack_require__(/*! ../../components/movieList.vue */ 51));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
 
 {
   data: function data() {

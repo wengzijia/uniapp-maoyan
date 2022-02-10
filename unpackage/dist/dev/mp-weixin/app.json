@@ -1,7 +1,10 @@
 {
   "pages": [
     "pages/movie/movie",
-    "pages/my/my"
+    "pages/my/my",
+    "pages/login/login",
+    "pages/register/register",
+    "pages/detail/detail"
   ],
   "subPackages": [],
   "window": {

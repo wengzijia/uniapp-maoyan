@@ -8,7 +8,7 @@ exports.fetchCity = function (latitude,longitude) {
 
 // 获取热映电影列表
 exports.fetchMovieList = function (page,pagesize) {
-  let url = `http://maoyan.wengzijia.top/comingList?page=${page}&pagesize=${pagesize}`;
+  let url = `http://unimy.wengzijia.top/comingList?page=${page}&pagesize=${pagesize}`;
   return request({url})
 }
 
@@ -37,8 +37,17 @@ exports.fetchToHitMovie = function(){
 }
 
 // 获取电影详情
+// exports.fetchMovieDetail=function(id){
+//   let url = `https://api.maoyan.com/mmdb/movie/v5/${id}.json?ci=30&channelId=70001&utm_medium=android&version=wallet-v2.18.25&uuid=80953d06272e3a9a90419c58a4f97933&platform=13&partner=1&riskLevel=71&optimusCode=10`;
+//   return request({
+//     url
+//   })
+// }
+
+// 获取电影详情
 exports.fetchMovieDetail=function(id){
-  let url = `https://api.maoyan.com/mmdb/movie/v5/${id}.json?ci=30&channelId=70001&utm_medium=android&version=wallet-v2.18.25&uuid=80953d06272e3a9a90419c58a4f97933&platform=13&partner=1&riskLevel=71&optimusCode=10`;
+	console.log('244',id)
+  let url = `http://unimy.wengzijia.top/detail/?movieId=${id}`;
   return request({
     url
   })

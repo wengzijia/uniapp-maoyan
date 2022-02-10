@@ -25,9 +25,10 @@
 /* 透明度 */
 /* 文章场景相关 */
 @font-face {
-  font-family: "iconfont";
-  /* Project id 3114384 */
-  src: url("//at.alicdn.com/t/font_3114384_ofar88f5xh.woff2?t=1641123737995") format("woff2"), url("//at.alicdn.com/t/font_3114384_ofar88f5xh.woff?t=1641123737995") format("woff"), url("//at.alicdn.com/t/font_3114384_ofar88f5xh.ttf?t=1641123737995") format("truetype");
+  font-family: "iconfont"; /* Project id 3114384 */
+  src: url('//at.alicdn.com/t/font_3114384_ofar88f5xh.woff2?t=1641123737995') format('woff2'),
+       url('//at.alicdn.com/t/font_3114384_ofar88f5xh.woff?t=1641123737995') format('woff'),
+       url('//at.alicdn.com/t/font_3114384_ofar88f5xh.ttf?t=1641123737995') format('truetype');
 }
 .iconfont {
   font-family: "iconfont" !important;
@@ -75,7 +76,7 @@
   margin: 20rpx;
 }
 .movieContainer .lateralContainer .expectMovies .movies {
-  width: 300rpx;
-  height: 300rpx;
+  width: 200rpx;
+  height: 200rpx;
 }
 

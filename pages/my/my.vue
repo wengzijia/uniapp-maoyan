@@ -1,36 +1,39 @@
 <template>
-    <view>
-        <scroll-view style="height: 300px;" scroll-y="true" refresher-enabled="true" :refresher-triggered="triggered"
-            :refresher-threshold="100" refresher-background="lightgreen" 
-            @refresherrefresh="onRefresh" @refresherrestore="onRestore" ></scroll-view>
-    </view>
+	<!-- #ifdef H5 -->
+	 <view class="username">用户名:{{username}}</view>
+	<!-- #endif -->
 </template>
 <script>
     export default {
         data() {
             return {
-                triggered: false
+				username:""
             }
         },
-        //  页面初始化触发 相当于vue  created生命周期       this.triggered = true;   非常重要
         onLoad() {
-            this._freshing = false;
-            // setTimeout(() => {
- 
-                this.triggered = true;   // 非常重要
-            // }, 1000)
+			this.username = uni.getStorageSync('username')
+			// #ifdef MP-WEIXIN
+			let token = uni.getStorageSync('token');
+			if(!token){
+				uni.navigateTo({
+					url:'../login/login'
+				})
+			}
+			// #endif
+			if(this.username === ""){
+				uni.navigateTo({
+					url:"../login/login"
+				})
+			}
         },
         methods: {
-            onRefresh() {
-                if (this._freshing) return;
-                this._freshing = true;
-                    this.triggered = false;  // 未触发
-                    this._freshing = false;
-            },
-            onRestore() {
-                this.triggered = 'restore'; // 需要重置
-                console.log("onRestore");
-            }
         }
     }
 </script>
+<style>
+	.username{
+		font-size: 60rpx;
+		text-align: center;
+		color: #007AFF;
+	}
+</style>

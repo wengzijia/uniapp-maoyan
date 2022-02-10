@@ -941,7 +941,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_NAME":"maoyan","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_NAME":"maoyan","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -7641,7 +7641,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_NAME":"maoyan","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_NAME":"maoyan","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -7662,14 +7662,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_NAME":"maoyan","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_NAME":"maoyan","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_NAME":"maoyan","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_NAME":"maoyan","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -7755,7 +7755,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"NODE_ENV":"development","VUE_APP_NAME":"maoyan","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_NAME":"maoyan","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -9581,7 +9581,7 @@ exports.fetchCity = function (latitude, longitude) {
 
 // 获取热映电影列表
 exports.fetchMovieList = function (page, pagesize) {
-  var url = "http://maoyan.wengzijia.top/comingList?page=".concat(page, "&pagesize=").concat(pagesize);
+  var url = "http://unimy.wengzijia.top/comingList?page=".concat(page, "&pagesize=").concat(pagesize);
   return request({ url: url });
 };
 
@@ -9610,8 +9610,17 @@ exports.fetchToHitMovie = function () {
 };
 
 // 获取电影详情
+// exports.fetchMovieDetail=function(id){
+//   let url = `https://api.maoyan.com/mmdb/movie/v5/${id}.json?ci=30&channelId=70001&utm_medium=android&version=wallet-v2.18.25&uuid=80953d06272e3a9a90419c58a4f97933&platform=13&partner=1&riskLevel=71&optimusCode=10`;
+//   return request({
+//     url
+//   })
+// }
+
+// 获取电影详情
 exports.fetchMovieDetail = function (id) {
-  var url = "https://api.maoyan.com/mmdb/movie/v5/".concat(id, ".json?ci=30&channelId=70001&utm_medium=android&version=wallet-v2.18.25&uuid=80953d06272e3a9a90419c58a4f97933&platform=13&partner=1&riskLevel=71&optimusCode=10");
+  console.log('244', id);
+  var url = "http://unimy.wengzijia.top/detail/?movieId=".concat(id);
   return request({
     url: url });
 
@@ -9720,6 +9729,89 @@ var apiCurrying = function apiCurrying(fn) {
 
 module.exports = {
   formatTime: formatTime, apiCurrying: apiCurrying };
+
+/***/ }),
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */
+/*!**********************************************************!*\
+  !*** C:/Users/weng/Desktop/自己/uniapp/maoyan/api/user.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var request = __webpack_require__(/*! ./request.js */ 22);
+// const apiUrl = 'https://maoyanapi.w0824.com'
+var API_URL = 'http://127.0.0.1:5566';
+// 获取token 
+exports.fetchGetToken = function (code) {
+  var url = "http://127.0.0.1:5566/wxlogin";
+  return request({
+    method: "POST",
+    url: url,
+    data: {
+      code: code } });
+
+
+};
+
+// 下单接口
+exports.fetchPlaceAnOrder = function (movieid, openid) {
+  var url = "".concat(API_URL, "/wxpay");
+  return request({
+    method: "POST",
+    url: url,
+    data: {
+      movieid: movieid, openid: openid } });
+
+
+};
+
+// 获取用户订单
+exports.fetchUserOrder = function () {
+  var url = "".concat(API_URL, "/userOrder");
+  return request({
+    url: url });
+
+};
+
+// 登录
+exports.fetchLogin = function (username, password) {
+  var url = "".concat(API_URL, "/login");
+  return request({
+    method: "POST",
+    url: url,
+    data: {
+      username: username, password: password } });
+
+
+};
+
+// 注册
+exports.fetchRegister = function (username, password) {
+  var url = "".concat(API_URL, "/register");
+  return request({
+    method: "POST",
+    url: url,
+    data: {
+      username: username, password: password } });
+
+
+};
 
 /***/ })
 ]]);

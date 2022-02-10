@@ -24,7 +24,7 @@
 					@refresherrefresh="pullToRefresh" :refresher-triggered="isPullRefresh" @refresherrestore="onRestore" scroll-y="true"
 					:style="{height: windowHeight + 'px'}">
 					<block v-for="item in movieListData" :key="item.auto_id">
-						<navigator open-type="navigate" style="border-bottom: 2rpx solid #f7ebeb">
+						<navigator open-type="navigate" :url="'/pages/detail/detail?id='+item.id" style="border-bottom: 2rpx solid #f7ebeb">
 							<movieList :hotMovieData="item"></movieList>
 						</navigator>
 					</block>
@@ -51,7 +51,7 @@
 				<view v-for="(item,index) in reflectedData" :key="item.id">
 					<view> {{index}} </view>
 					<block v-for="data in item" :key="data.id">
-						<navigator open-type="navigate" style="border-bottom: 2rpx solid #f7ebeb">
+						<navigator open-type="navigate" :url="'/pages/detail/detail?id='+data.id" style="border-bottom: 2rpx solid #f7ebeb">
 							<movieList :hotMovieData="data"></movieList>
 						</navigator>
 					</block>
@@ -287,7 +287,7 @@
 </script>
 
 <style lang="scss">
-	@import "../../assets/iconfont.wxss";
+	@import "../../assets/iconfont.css";
 
 	.tabs {
 		display: flex;
@@ -324,8 +324,8 @@
 	.expectMovies{
 		margin: 20rpx;
 		.movies{
-			width: 300rpx;
-			height: 300rpx;
+			width: 200rpx;
+			height: 200rpx;
 		}
 	}
 	}

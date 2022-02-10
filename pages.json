@@ -9,7 +9,16 @@
             "style" : {
                 "navigationBarTitleText" : "我的"
             }
-        }
+        },
+		{
+		    "path" : "pages/login/login"
+		},
+		{
+		    "path" : "pages/register/register"
+		},
+		{
+		    "path" : "pages/detail/detail"
+		}
     ],
     "tabBar" : {
         "color" : "#7A7E83",
