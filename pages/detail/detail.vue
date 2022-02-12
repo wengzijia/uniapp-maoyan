@@ -45,18 +45,9 @@
 	    </view>
 	    <scroll-view  scroll-x="true">
 	        <view class="container">
-	           <view class="imgWrap" >
-	                <image class="img" src="https://p0.pipi.cn/friday/954c22078920a5aa50ad52e7b1dfe57e.jpg?imageMogr2/thumbnail/2500x2500%3E"></image>
+	           <view class="imgWrap"  v-for="(item,index) in photos" :key="index">
+	                <image class="img" :src="item"></image>
 				</view>
-				<view class="imgWrap" >
-				     <image class="img" src="https://p0.pipi.cn/friday/954c22078920a5aa50ad52e7b1dfe57e.jpg?imageMogr2/thumbnail/2500x2500%3E"></image>
-				</view>
-				<view class="imgWrap" >
-				     <image class="img" src="https://p0.pipi.cn/friday/954c22078920a5aa50ad52e7b1dfe57e.jpg?imageMogr2/thumbnail/2500x2500%3E"></image>
-								</view>
-								<view class="imgWrap" >
-								     <image class="img" src="https://p0.pipi.cn/friday/954c22078920a5aa50ad52e7b1dfe57e.jpg?imageMogr2/thumbnail/2500x2500%3E"></image>
-								</view>
 	        </view>
 	    </scroll-view>
 	
@@ -75,13 +66,17 @@
 	export default{
 		data(){
 			return{
-				detailData:{}
+				detailData:{},
+				photos:[]
 			}
 		},
 		async onLoad(option){
 			let result = await fetchMovieDetail(option.id);
 			result[0].img = result[0].img.replace(/\w.h/, '');
 			this.detailData = result[0];
+			this.photos.push(result[0].photos.split(','));
+			this.photos = this.photos[0]
+			console.log('232',this.photos)
 			console.log(this.detailData)
 		}
 	}
