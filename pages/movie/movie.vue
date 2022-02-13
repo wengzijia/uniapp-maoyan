@@ -1,11 +1,15 @@
 <template>
 	<view class="movieContainer">
-		<view>
+		<!-- <view>
 			<text>{{city}}</text>
 			<icon class="iconfont icon-dingwei"></icon>
-		</view>
+		</view> -->
 		<!-- tabs标签页 -->
 		<view class="tabs">
+			<view style="margin-left: 20rpx;color: #333333;">
+			<text>{{city}}</text>
+			<icon class="iconfont icon-dingwei"></icon>
+			</view>
 			<view class="tab_item" :class="{cur:index === tabCur}" v-for="(item, index) in ['热映', '待映']" :key="index"
 				@click="tabSelect(index)">{{ item }}</view>
 		</view>
@@ -23,11 +27,13 @@
 				<scroll-view refresher-enabled="true" @scrolltolower="scrollLoadMore"
 					@refresherrefresh="pullToRefresh" :refresher-triggered="isPullRefresh" @refresherrestore="onRestore" scroll-y="true"
 					:style="{height: windowHeight + 'px'}">
+					<view style="margin-top: 100rpx;">
 					<block v-for="item in movieListData" :key="item.auto_id">
 						<navigator open-type="navigate" :url="'/pages/detail/detail?id='+item.id" style="border-bottom: 2rpx solid #f7ebeb">
 							<movieList :hotMovieData="item"></movieList>
 						</navigator>
 					</block>
+					</view>
 				</scroll-view>
 				<view style="margin:auto;background-color:red;color:white;width:200rpx;" v-if="!isLoadFinish">已经到底啦!!!
 				</view>
@@ -39,7 +45,7 @@
 					<!-- <view class="rich">
 						<rich-text :nodes="expectMoviesData"></rich-text>
 					</view> -->
-					<view class="lateralContainer">
+					<view class="lateralContainer" style="margin-top: 120rpx;">
 					<view class="expectMovies" v-for="item in crosswiseData" :key="item.id">
 						<image class="movies" :src="item.img"></image>
 						<view class="title">{{item.nm}}</view>
@@ -80,7 +86,7 @@
 	export default {
 		data() {
 			return {
-				city: "中华人民共和国",
+				city: "汕头市",
 				tabCur: 0, // 当前tabs下标
 				isAgreeGetLocation: true,
 				isFirstTime: true,
@@ -130,7 +136,7 @@
 			async movieList() {
 				let result = await fetchMovieList(this.page, this.pagesize);
 				// 说明加载完毕
-				if (result.length < this.pagesize) {
+				if (!result.length) {
 					this.isLoadFinish = false
 					wx.showToast({
 						title: '加载完毕了',
@@ -182,7 +188,6 @@
 					windowHeight
 				} = await wxGetSystemInfo()
 				this.windowHeight = windowHeight
-				console.log(windowHeight)
 			},
 			// 上拉加载更多   页码++  然后再发送请求获取
 			scrollLoadMore() {
@@ -291,20 +296,23 @@
 
 	.tabs {
 		display: flex;
-		justify-content: space-evenly;
+		// justify-content: space-evenly;
+		align-items: center;
 		font-size: 32rpx;
 		background-color: #FFF;
 		color: #A9A9A9;
+		position: fixed;
+		z-index: 99999;
+		width: 100%;
 	}
 
 	.tab_item {
 		height: 114rpx;
 		line-height: 100rpx;
-
+		margin: 0 80rpx;
 		&.cur {
 			position: relative;
 			color: #F62D5C;
-
 			&::after {
 				content: '';
 				width: 36rpx;
@@ -314,6 +322,7 @@
 				left: 50%;
 				margin-left: -18rpx;
 				background-color: #F62D5C;
+				border-radius: 100rpx;
 			}
 		}
 	}

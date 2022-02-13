@@ -45,14 +45,18 @@
 }
 .tabs {
   display: flex;
-  justify-content: space-evenly;
+  align-items: center;
   font-size: 32rpx;
   background-color: #FFF;
   color: #A9A9A9;
+  position: fixed;
+  z-index: 99999;
+  width: 100%;
 }
 .tab_item {
   height: 114rpx;
   line-height: 100rpx;
+  margin: 0 80rpx;
 }
 .tab_item.cur {
   position: relative;
@@ -67,6 +71,7 @@
   left: 50%;
   margin-left: -18rpx;
   background-color: #F62D5C;
+  border-radius: 100rpx;
 }
 .movieContainer .lateralContainer {
   display: flex;

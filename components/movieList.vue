@@ -1,5 +1,5 @@
 <template>
-<view class="movieListContainer">
+<view class="movieListContainer" >
 <view class="imgWrap">
   <image :src="hotMovieData.img"></image>
 </view>

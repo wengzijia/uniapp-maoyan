@@ -210,6 +210,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 var _require =
 
 
@@ -229,7 +235,7 @@ var wxGetSystemInfo = apiCurrying(wx.getSystemInfo);var movieList = function mov
 {
   data: function data() {
     return {
-      city: "中华人民共和国",
+      city: "汕头市",
       tabCur: 0, // 当前tabs下标
       isAgreeGetLocation: true,
       isFirstTime: true,
@@ -277,9 +283,9 @@ var wxGetSystemInfo = apiCurrying(wx.getSystemInfo);var movieList = function mov
     },
     // 获取热映电影列表
     movieList: function movieList() {var _this2 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {var result;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:_context2.next = 2;return (
-                  fetchMovieList(_this2.page, _this2.pagesize));case 2:result = _context2.sent;if (!(
+                  fetchMovieList(_this2.page, _this2.pagesize));case 2:result = _context2.sent;if (
 
-                result.length < _this2.pagesize)) {_context2.next = 7;break;}
+                result.length) {_context2.next = 7;break;}
                 _this2.isLoadFinish = false;
                 wx.showToast({
                   title: '加载完毕了' });return _context2.abrupt("return");case 7:
@@ -330,8 +336,7 @@ var wxGetSystemInfo = apiCurrying(wx.getSystemInfo);var movieList = function mov
 
 
                   wxGetSystemInfo());case 2:_yield$wxGetSystemInf = _context5.sent;windowHeight = _yield$wxGetSystemInf.windowHeight;
-                _this5.windowHeight = windowHeight;
-                console.log(windowHeight);case 6:case "end":return _context5.stop();}}}, _callee5);}))();
+                _this5.windowHeight = windowHeight;case 5:case "end":return _context5.stop();}}}, _callee5);}))();
     },
     // 上拉加载更多   页码++  然后再发送请求获取
     scrollLoadMore: function scrollLoadMore() {
